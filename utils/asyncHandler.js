@@ -17,4 +17,4 @@ const asyncHandler = (requestHandler) => (req, res, next) => {
 };
 
 export { asyncHandler };
-async;
+

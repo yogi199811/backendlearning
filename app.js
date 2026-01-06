@@ -1,10 +1,8 @@
 import express, { urlencoded } from "express";
-import dotenv from "dotenv";
-import connectDb from "./database/index.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 const app = express();
-const PORT = process.env.PORT || 8080;
+
 
 app.use(
   cors({
@@ -15,26 +13,17 @@ app.use(
 );
 
 app.use(cookieParser());
-app.use(urlencoded({extended:true,limit:"16kb"}));
+app.use(urlencoded({ extended: true, limit: "16kb" }));
 app.use(express.json({ limit: "16Kb" }));
-app.use(express.static("public"))
+app.use(express.static("public"));
 
-dotenv.config();
+// import router
 
-connectDb()
-  .then(() => {
-    app.on("error", (error) => {
-      console.log("error while connecting", error);
-      throw error;
-    });
+import userRoutes from "./api/v1/routes/user.route.js";
 
-    app.listen(PORT, () => {
-      console.log(`server is running on port : ${PORT}`);
-    });
-  })
-  .catch((err) => {
-    console.log("mongo db connection error", err);
-  });
+//  routes  declear
+
+app.use("/user", userRoutes);
 
 app.get("/", (req, res) => {
   res.send("i am listing");
