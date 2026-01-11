@@ -25,14 +25,22 @@ const userSchema = new mongoose.Schema(
     },
     age: {
       type: Number,
-      required: true,
+      // required: true,
       min: 1,
       max: 120,
     },
 
+    avatarImage:{
+      type:String
+    },
+
+    coverImage:{
+      type:String
+    },
+
     password: {
       type: String,
-      minlength: 8,
+      minlength: 4,
       required: [true, "Password is required.."],
     },
 
@@ -50,11 +58,10 @@ const userSchema = new mongoose.Schema(
 
 /* this pre is a middleware in database which will run just befor saving data and database and we are encryipting the password using bcryptjs and we use next() to move for another middleware. */
 
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
+userSchema.pre("save", async function () {
+  if (!this.isModified("password")) return ;
 
-  this.password = bcrypt.hash(this.password, 10);
-  next();
+  this.password = await bcrypt.hash(this.password, 10);
 });
 
 /* now we can also create methods in mongodb  using methods.methodsname  , we can use it like methods find update create, here isPasswordCorrect is a methods for checking password */
@@ -68,7 +75,7 @@ userSchema.methods.generateAccessToken = async function () {
  return jwt.sign(
     {
       _id: this._id,
-      email: this.emil,
+      email: this.email,
       name: this.name,
       age: this.age,
     },

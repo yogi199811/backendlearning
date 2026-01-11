@@ -4,11 +4,20 @@ import cookieParser from "cookie-parser";
 const app = express();
 
 
+// app.use(
+//   cors({
+//     origin: process.env.CORS_ORIGIN,
+//     methods: ["POST", "PUT", "GET", "DELETE"],
+//     credentials: true,
+//   })
+// );
+
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN,
-    methods: ["POST", "PUT", "GET", "DELETE"],
+    origin: "http://localhost:5173",
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
@@ -23,10 +32,14 @@ import userRoutes from "./api/v1/routes/user.route.js";
 
 //  routes  declear
 
-app.use("/user", userRoutes);
+app.use("/api/v1/user", userRoutes);
 
 app.get("/", (req, res) => {
   res.send("i am listing");
+});
+
+app.get("/test-cors", (req, res) => {
+  res.json({ message: "CORS OK" });
 });
 
 export { app };
